@@ -29,3 +29,7 @@ This is a simple movie recommendation system built using Node.js and Express.js.
    git clone https://github.com/yourusername/movie-recommendation.git
    cd movie-recommendation
    ```
+   ### Install the dependencies:
+   npm install
+   ### Run the Server:
+   npm start
