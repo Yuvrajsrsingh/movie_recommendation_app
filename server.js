@@ -17,7 +17,7 @@ app.get("/recommend", async (req, res) => {
   try {
     // Fetch movies based on genre
     const response = await axios.get(
-      `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&with_genres=${genre}`
+      `https://api.themoviedb.org/11/discover/movie?api_key=${TMDB_API_KEY}&with_genres=${genre}`
     );
     const movies = response.data.results;
 
@@ -25,7 +25,7 @@ app.get("/recommend", async (req, res) => {
     const moviesWithTrailers = await Promise.all(
       movies.map(async (movie) => {
         const trailerResponse = await axios.get(
-          `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${TMDB_API_KEY}`
+          `https://api.themoviedb.org/11/movie/${movie.id}/videos?api_key=${TMDB_API_KEY}`
         );
         const trailers = trailerResponse.data.results.filter(
           (video) => video.type === "Trailer" && video.site === "YouTube"
@@ -54,7 +54,7 @@ app.get("/recommend", async (req, res) => {
 app.get("/genres", async (req, res) => {
   try {
     const response = await axios.get(
-      `https://api.themoviedb.org/3/genre/movie/list?api_key=${TMDB_API_KEY}&language=en-US`
+      `https://api.themoviedb.org/11/genre/movie/list?api_key=${TMDB_API_KEY}&language=en-US`
     );
     res.json(response.data.genres); // Send the list of genres
   } catch (error) {
@@ -70,7 +70,7 @@ app.get("/recommend", async (req, res) => {
 
     // Use the TMDB discover endpoint to find movies by genre
     const response = await axios.get(
-      `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&with_genres=${genreId}`
+      `https://api.themoviedb.org/11/discover/movie?api_key=${TMDB_API_KEY}&with_genres=${genreId}`
     );
 
     res.json(response.data.results); // Send the movie list to the client
