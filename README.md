@@ -26,7 +26,7 @@ This is a simple movie recommendation system built using Node.js and Express.js.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/movie-recommendation.git
+   git clone https://github.com/yuvrajsrsingh/movie-recommendation.git
    cd movie-recommendation
    ```
    ### Install the dependencies:
