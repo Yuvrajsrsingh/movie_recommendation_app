@@ -4,24 +4,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const recommendationDiv = document.getElementById("recommendation");
   const loaderDiv = document.getElementById("loader");
 
-  // Fetch and populate genres in the dropdown
+  const API_BASE_URL = ""; // Use the relative path (Vercel automatically resolves it)
+
   async function fetchGenres() {
     try {
-      const response = await axios.get("/genres");
+      const response = await axios.get(`${API_BASE_URL}/genres`);
       const genres = response.data;
 
       genres.forEach((genre) => {
         const option = document.createElement("option");
         option.value = genre.id;
         option.textContent = genre.name;
-        genreSelect.appendChild(option); // Populate genres in the dropdown
+        genreSelect.appendChild(option);
       });
     } catch (error) {
       console.error("Error fetching genres:", error);
     }
   }
 
-  fetchGenres(); // Load genres when the page is ready
+  fetchGenres();
 
   recommendBtn.addEventListener("click", async () => {
     const selectedGenre = genreSelect.value;
@@ -32,10 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     loaderDiv.style.display = "block";
-    recommendationDiv.innerHTML = ""; // Clear previous recommendations
+    recommendationDiv.innerHTML = "";
 
     try {
-      const response = await axios.get(`/recommend?genre=${selectedGenre}`);
+      const response = await axios.get(
+        `${API_BASE_URL}/recommend?genre=${selectedGenre}`
+      );
       const movies = response.data;
 
       if (movies.length > 0) {
@@ -81,8 +84,7 @@ function openTrailerModal(trailerUrl) {
   $("#trailerModal").modal("show");
 }
 
-// Close the trailer modal and stop the video
 function closeTrailerModal() {
   const modalBody = document.getElementById("trailerModalBody");
-  modalBody.innerHTML = ""; // Clear the iframe when modal is closed
+  modalBody.innerHTML = "";
 }
