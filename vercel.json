@@ -9,8 +9,5 @@
       "src": "api/server.js",
       "use": "@vercel/node"
     }
-  ],
-  "env": {
-    "TMDB_API_KEY": "@tmdb_api_key"
-  }
+  ]
 }
