@@ -16,8 +16,8 @@ app.use(express.static("public"));
 if (!TMDB_API_KEY) {
   console.warn(
     "\n⚠️  [WARNING] TMDB_API_KEY is not defined in your environment variables!" +
-    "\nPlease create a .env file with TMDB_API_KEY=your_key_here." +
-    "\nGet a free API key at: https://www.themoviedb.org/settings/api\n"
+      "\nPlease create a .env file with TMDB_API_KEY=your_key_here." +
+      "\nGet a free API key at: https://www.themoviedb.org/settings/api\n",
   );
 }
 
@@ -25,13 +25,14 @@ if (!TMDB_API_KEY) {
 app.get("/genres", async (req, res) => {
   if (!TMDB_API_KEY) {
     return res.status(500).json({
-      error: "TMDB_API_KEY is not configured on the server. Please set it in your .env file.",
+      error:
+        "TMDB_API_KEY is not configured on the server. Please set it in your .env file.",
     });
   }
 
   try {
     const response = await axios.get(
-      `https://api.themoviedb.org/3/genre/movie/list?api_key=${TMDB_API_KEY}&language=en-US`
+      `https://api.themoviedb.org/3/genre/movie/list?api_key=${TMDB_API_KEY}&language=en-US`,
     );
     res.json(response.data.genres || []);
   } catch (error) {
@@ -52,18 +53,21 @@ app.get("/genres", async (req, res) => {
 app.get("/recommend", async (req, res) => {
   if (!TMDB_API_KEY) {
     return res.status(500).json({
-      error: "TMDB_API_KEY is not configured on the server. Please set it in your .env file.",
+      error:
+        "TMDB_API_KEY is not configured on the server. Please set it in your .env file.",
     });
   }
 
   const { genre } = req.query;
   if (!genre) {
-    return res.status(400).json({ error: "The 'genre' query parameter is required." });
+    return res
+      .status(400)
+      .json({ error: "The 'genre' query parameter is required." });
   }
 
   try {
     const response = await axios.get(
-      `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&with_genres=${encodeURIComponent(genre)}`
+      `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&with_genres=${encodeURIComponent(genre)}`,
     );
     const movies = response.data.results || [];
 
@@ -73,11 +77,11 @@ app.get("/recommend", async (req, res) => {
         let trailerUrl = null;
         try {
           const trailerResponse = await axios.get(
-            `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${TMDB_API_KEY}`
+            `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${TMDB_API_KEY}`,
           );
           const videos = trailerResponse.data?.results || [];
           const trailers = videos.filter(
-            (video) => video.type === "Trailer" && video.site === "YouTube"
+            (video) => video.type === "Trailer" && video.site === "YouTube",
           );
 
           if (trailers.length > 0 && trailers[0].key) {
@@ -85,14 +89,17 @@ app.get("/recommend", async (req, res) => {
           }
         } catch (trailerErr) {
           // Non-critical: log and proceed with trailerUrl = null
-          console.warn(`Trailer unavailable for movie ID ${movie.id}:`, trailerErr.message);
+          console.warn(
+            `Trailer unavailable for movie ID ${movie.id}:`,
+            trailerErr.message,
+          );
         }
 
         return {
           ...movie,
           trailerUrl,
         };
-      })
+      }),
     );
 
     res.json(moviesWithTrailers);
@@ -111,10 +118,9 @@ app.get("/recommend", async (req, res) => {
 });
 
 // Start local server if not running as a Vercel serverless function
-if (process.env.NODE_ENV !== "test") {
+if (!process.env.VERCEL && process.env.NODE_ENV !== "test") {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
 }
-
 module.exports = app; // Necessary for Vercel
